@@ -7,9 +7,8 @@ import statsmodels.api as sm
 # 1) Input
 
 data = pd.read_csv('data.csv', sep = ';')
-x = np.array(data['SAT'])
-y = np.array(data['GPA'])
-x = x.reshape((-1, 1))
+x = data[['SAT', 'Random']]
+y = data['GPA']
 
 # 2) Output
 
