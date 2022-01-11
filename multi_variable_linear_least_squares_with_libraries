@@ -1,0 +1,46 @@
+import numpy as np
+import matplotlib.pyplot as plt  # To visualize
+import pandas as pd  # To read data
+from sklearn.linear_model import LinearRegression
+import statsmodels.api as sm
+
+# 1) Input
+
+data = pd.read_csv('data.csv', sep = ';')
+x = data[['SAT', 'Random']]
+y = data['GPA']
+
+# 2) Output
+
+# 2.0) Create Linear Regression (y = bo + b1 * x1 + + b2 * x2 + e)
+
+linear_regression = LinearRegression()  # create object for the class
+
+# 2.1) Perform linear regression
+
+linear_regression.fit(x, y)  # perform linear regression
+
+# 2.2) Determine coefficients bo and b1
+
+b0 = linear_regression.intercept_
+b1 = linear_regression.coef_
+
+# 2.3) Determine R²
+
+R_squared = linear_regression.score(x, y)
+
+# 2.4) Summary table
+
+summary_table = sm.OLS(y, sm.add_constant(x)).fit().summary()
+
+# 2.5) Make predictions for y
+
+y_prediction = linear_regression.predict(x)
+
+# 3) Results
+
+print('bo = ', b0)
+print('b1 = ', b1)
+print('R² = ', R_squared)
+print('y_prediction = ', y_prediction)
+print(summary_table)
