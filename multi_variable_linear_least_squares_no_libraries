@@ -1,14 +1,29 @@
 import numpy as np
 import matplotlib.pyplot as plt  # To visualize
 import pandas as pd  # To read data
-from sklearn.linear_model import LinearRegression
-import statsmodels.api as sm
 
 # 1) Input
+# Regression equation: y = x * b + ϵ
+# y is the response vector
+# b is the vector of parameters
+# x is the design matrix (model matrix, regressor matrix)
+# ϵ is the error vector
 
 data = pd.read_csv('data.csv', sep = ';')
 y = data['GPA']
 
-x_column = [x for x in data.columns if x != y.name]
+x_columns = [x for x in data.columns if x != y.name]
 ones = np.array([1 for x in range(0, len(data))])
-x = ones + np.array(data[x_column])
+x = np.column_stack((ones, np.array(data[x_columns]))) 
+
+
+
+
+# 2.6) Regression equation (y = x * b + ϵ)
+# y is the response vector
+# b is the vector of parameters, b = inv(x * x.T) * x.T * y
+# x is the design matrix (model matrix, regressor matrix)
+# ϵ is the error vector
+
+b = np.dot(np.linalg.inv(np.dot(x.T, x)), np.dot(x.T, y))
+y_predicted = [b0 + b1 * i for i in x]
