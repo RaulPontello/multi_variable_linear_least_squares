@@ -1,46 +1,87 @@
-import numpy as np
-import matplotlib.pyplot as plt  # To visualize
-import pandas as pd  # To read data
-from sklearn.linear_model import LinearRegression
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 import statsmodels.api as sm
 
-# 1) Input
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from yellowbrick.regressor import residuals_plot
+from sklearn import metrics
 
-data = pd.read_csv('data.csv', sep = ';')
-x = data[['SAT', 'Random']]
-y = data['GPA']
+# Input
 
-# 2) Output
+data = pd.read_csv('Consumo_cerveja.csv', sep = ';')
+x = data[['temp_max', 'chuva',	'fds']]
+y = data['consumo']
+train_size = 0.7 # how much data from x will x_train have 
 
-# 2.0) Create Linear Regression (y = bo + b1 * x1 + + b2 * x2 + e)
+# Define train and test data
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=train_size, random_state=2811)
+
+# Output
+
+# Correlation matrix
+
+correlation_matrix = data.corr()
+
+# Create Linear Regression (y = bo + b1 * x1 + + b2 * x2 + e)
 
 linear_regression = LinearRegression()  # create object for the class
 
-# 2.1) Perform linear regression
+# Perform linear regression
 
 linear_regression.fit(x, y)  # perform linear regression
 
-# 2.2) Determine coefficients bo and b1
+# Determine coefficients bo and b1
 
 b0 = linear_regression.intercept_
-b1 = linear_regression.coef_
+b = linear_regression.coef_
 
-# 2.3) Determine R²
-
-R_squared = linear_regression.score(x, y)
-
-# 2.4) Summary table
+# Summary table
 
 summary_table = sm.OLS(y, sm.add_constant(x)).fit().summary()
 
-# 2.5) Make predictions for y
+# Make predictions for y
 
-y_prediction = linear_regression.predict(x)
+y_predicted = linear_regression.predict(x_test)
 
-# 3) Results
+# Residuals
+  
+residuals = y_test - y_predicted
 
+# Model metrics
+
+R_squared_train = linear_regression.score(x_train, y_train)
+R_squared_test = metrics.r2_score(y_test, y_predicted)
+mean_squared_error = metrics.mean_squared_error(y_test, y_predicted)
+root_mean_squared_error = mean_squared_error ** 0.5
+mean_absolute_error = metrics.mean_absolute_error(y_test, y_predicted)
+
+# Create figures
+
+fig, ax = plt.subplots(1,2,figsize=(22,6))
+
+# Verify linearity assumptions
+
+sns.scatterplot(x = y_predicted, y = residuals, ax=ax[0])
+sns.distplot(x = residuals, ax=ax[1], bins = 40)
+ax[0].set_title('Verify homoscedasticity of residuals', fontsize=18)
+ax[0].set_xlabel('y real', fontsize=14)
+ax[0].set_ylabel('residuals', fontsize=14)
+ax[1].set_xlabel('frequence', fontsize=14)
+ax[1].set_ylabel('residual', fontsize=14)
+ax[1].set_title('Verify frequence distribution of residuals', fontsize=18)
+
+# Results
+
+#print('correlation_matrix = ', correlation_matrix)
 print('bo = ', b0)
-print('b1 = ', b1)
-print('R² = ', R_squared)
-print('y_prediction = ', y_prediction)
+print('b = ', b)
+print('R² train = ', R_squared_train)
+print('R² test = ', R_squared_test)
+print('mean_squared_error = ', mean_squared_error)
+print('mean_absolute_error = ', mean_absolute_error)
+print('root_mean_squared_error = ', root_mean_squared_error)
+#print('y_predicted = ', y_predicted)
 print(summary_table)
