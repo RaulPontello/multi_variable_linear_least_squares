@@ -33,7 +33,7 @@ linear_regression = LinearRegression()  # create object for the class
 
 linear_regression.fit(x, y)  # perform linear regression
 
-# Determine coefficients bo and b1
+# Determine coefficients b and b1
 
 b0 = linear_regression.intercept_
 b = linear_regression.coef_
