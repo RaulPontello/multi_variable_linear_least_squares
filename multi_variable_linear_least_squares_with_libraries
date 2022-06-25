@@ -31,16 +31,16 @@ linear_regression = LinearRegression()  # create object for the class
 
 # Perform linear regression
 
-linear_regression.fit(x, y)  # perform linear regression
+linear_regression.fit(x_train, y_train)  # perform linear regression
 
-# Determine coefficients b and b1
+# Determine coefficients bo and b1
 
 b0 = linear_regression.intercept_
 b = linear_regression.coef_
 
 # Summary table
 
-summary_table = sm.OLS(y, sm.add_constant(x)).fit().summary()
+summary_table = sm.OLS(y_train, sm.add_constant(x_train)).fit().summary()
 
 # Make predictions for y
 
@@ -60,18 +60,22 @@ mean_absolute_error = metrics.mean_absolute_error(y_test, y_predicted)
 
 # Create figures
 
-fig, ax = plt.subplots(1,2,figsize=(22,6))
+fig, ax = plt.subplots(1,3,figsize=(22,6))
 
-# Verify linearity assumptions
+# Set figures
 
 sns.scatterplot(x = y_predicted, y = residuals, ax=ax[0])
 sns.distplot(x = residuals, ax=ax[1], bins = 40)
+sns.scatterplot(x = y_predicted, y = y_test, ax=ax[2])
 ax[0].set_title('Verify homoscedasticity of residuals', fontsize=18)
 ax[0].set_xlabel('y real', fontsize=14)
 ax[0].set_ylabel('residuals', fontsize=14)
 ax[1].set_xlabel('frequence', fontsize=14)
 ax[1].set_ylabel('residual', fontsize=14)
 ax[1].set_title('Verify frequence distribution of residuals', fontsize=18)
+ax[2].set_xlabel('y_predicted', fontsize=14)
+ax[2].set_ylabel('y_test', fontsize=14)
+ax[2].set_title('y_test x y_predicted', fontsize=18)
 
 # Results
 
