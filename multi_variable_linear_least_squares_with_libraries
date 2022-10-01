@@ -11,7 +11,7 @@ from sklearn import metrics
 # Input
 
 data = pd.read_csv('data.csv', sep = ',')
-x = data[['SAT']]
+x = data[['SAT', 'Attendance']]
 y = data['GPA']
 
 # Output
@@ -65,7 +65,7 @@ sns.distplot(x = residuals, ax=ax[1], bins = 50)
 ax[1].axvline(residuals.mean(), ls='--', color = 'red')
 sns.scatterplot(x = y_predicted, y = y, ax=ax[2])
 ax[0].set_title('Verify homoscedasticity of residuals', fontsize=18)
-ax[0].set_xlabel('y_real', fontsize=14)
+ax[0].set_xlabel('y_predicted', fontsize=14)
 ax[0].set_ylabel('residuals', fontsize=14)
 ax[1].set_xlabel('residual', fontsize=14)
 ax[1].set_ylabel('frequence', fontsize=14)
